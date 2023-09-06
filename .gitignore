@@ -4,5 +4,12 @@ instance/
 
 __pycache__/
 
+# Replit stuff
+.pythonlibs
+.replit
+poetry.lock
+pyproject.toml
+replit.nix
+
 # Environments
 .venv
