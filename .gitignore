@@ -12,8 +12,6 @@ pyproject.toml
 replit.nix
 .breakpoints
 
-# Environments
-.venv
 .config
 
 node_modules
