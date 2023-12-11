@@ -17,3 +17,4 @@ replit.nix
 node_modules
 database.db
 .env
+app/static/dist/output.css
