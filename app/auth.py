@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import check_password_hash
 from .tools.utils import User, db_connect
 
@@ -23,6 +23,8 @@ def login_post():
     if not check_password_hash(user_data["passwordHash"], password):
         flash("Invalid login details")
         return redirect(url_for("auth.login"))
+    
+    session["email"] = email
 
     return redirect(url_for("main.decks"))
 
@@ -52,4 +54,6 @@ def register_post():
 
 @auth.route("/logout")
 def logout():
-    pass
+    session["email"] = None
+    flash("Logged out")
+    return redirect(url_for("auth.login"))

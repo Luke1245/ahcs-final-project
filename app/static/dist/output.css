@@ -668,6 +668,10 @@ video {
   padding-top: 2.5rem;
 }
 
+.pt-5 {
+  padding-top: 1.25rem;
+}
+
 .font-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
@@ -679,6 +683,11 @@ video {
 
 .font-semibold {
   font-weight: 600;
+}
+
+.text-thistle {
+  --tw-text-opacity: 1;
+  color: rgb(222 197 227 / var(--tw-text-opacity));
 }
 
 .drop-shadow-lg {

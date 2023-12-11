@@ -1,6 +1,7 @@
 # Flask stuff:
 instance/
 .webassets-cache
+flask_session
 
 __pycache__/
 
