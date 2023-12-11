@@ -30,7 +30,7 @@ def login_post():
 
     session["email"] = email
 
-    return redirect(url_for("main.decks"))
+    return redirect(url_for("main.list_decks"))
 
 
 @auth.route("/register")
@@ -64,6 +64,10 @@ def register_post():
 
 @auth.route("/logout")
 def logout():
+    if session["email"] is None:
+        flash("Not signed in")
+        return redirect(url_for("auth.login"))
+    
     session["email"] = None
     flash("Logged out")
     return redirect(url_for("auth.login"))

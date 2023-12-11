@@ -7,6 +7,27 @@
     <title>{% block title %} {% endblock %}</title>
   </head>
   <body class="bg-white">
+    <nav class="fixed flex place-content-center w-full flex-nowrap bg-thistle py-2 lg:py-4 text-lg font-semibold">
+      <div class="px-3">
+          <ul class="flex flex-col pl-0 lg:mt-1 lg:flex-row">
+            <li class="my-4 pl-6 lg:my-0 lg:pl-6 lg:pr-1">
+              <a class="" href="/login">Login</a>
+            </li>
+            <li class="my-4 pl-6 lg:my-0 lg:pl-6 lg:pr-1">
+              <a href="/logout">Logout</a>
+            </li>
+            <li class="my-4 pl-6 lg:my-0 lg:pl-6 lg:pr-1">
+              <a href="/register">Register</a>
+            </li>
+            <li class="my-4 pl-6 lg:my-0 lg:pl-6 lg:pr-1">
+              <a href="/">Decks</a>
+            </li>
+            <li class="my-4 pl-6 lg:my-0 lg:pl-6 lg:pr-1">
+              <a href="/add_card">Add Card</a>
+            </li>
+          </ul>
+      </div>
+    </nav>
     {% block content %} {% endblock %}
     {% with messages = get_flashed_messages() %}
       {% if messages %}

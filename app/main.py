@@ -5,7 +5,20 @@ main = Blueprint("main", __name__)
 
 
 @main.route("/")
-def decks():
+def list_decks():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
     return render_template("index.html")
+
+@main.route("/add_card")
+def add_card():
+    if not session.get("email"):
+        return redirect(url_for("auth.login"))
+    return render_template("create_deck.html")
+
+@main.route("/add_card", methods=["POST"])
+def add_card_post():
+    if not session.get("email"):
+        return redirect(url_for("auth.login"))
+    
+    return redirect(url_for("main.list_decks"))
