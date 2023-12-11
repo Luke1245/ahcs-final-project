@@ -1,11 +1,30 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
+from werkzeug.security import check_password_hash
 from .tools.utils import User, db_connect
 
 auth = Blueprint("auth", __name__)
 
 @auth.route("/login")
 def login():
-    return render_template("index.html")
+    return render_template("login.html")
+
+@auth.route("/login", methods=["POST"])
+def login_post():
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    connection = db_connect()
+    user_data = connection.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+
+    if user_data is None:
+        flash("Invalid login details")
+        return redirect(url_for("auth.login"))
+    
+    if not check_password_hash(user_data["passwordHash"], password):
+        flash("Invalid login details")
+        return redirect(url_for("auth.login"))
+
+    return redirect(url_for("main.decks"))
 
 @auth.route("/register")
 def register():
@@ -20,6 +39,7 @@ def register_post():
         user = User(email, password)
     except ValueError as error:
         flash(str(error))
+        return redirect(url_for('auth.register'))
     else:
         connection = db_connect()
         connection.execute("INSERT INTO users (email, passwordHash) VALUES (?, ?)", (user.email, user.passwordHash))
