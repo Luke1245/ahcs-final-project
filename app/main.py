@@ -3,6 +3,7 @@ from .tools.utils import User, db_connect
 
 main = Blueprint("main", __name__)
 
+
 @main.route("/")
 def decks():
     if not session.get("email"):
