@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{{url_for('static',filename='dist/output.css')}}">
+    <title>{% block title %} {% endblock %}</title>
+  </head>
+  <body class="bg-white">
+    {% block content %} {% endblock %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div id="toast" class="fixed right-10 bottom-20 px-6 py-4 border-r-8 border-thistle bg-white drop-shadow-lg rounded">
+          <p class="text-lg font-mono">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+          </p>
+        </div>
+      {% endif %}
+    {% endwith %}
+  </body>
+</html>
