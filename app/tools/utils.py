@@ -41,20 +41,23 @@ class Deck:
         self.numberOfCards = numberOfCards
 
     def _validate_deck_name(self, deckName):
-        connection = db_connect()
-        duplicate_amount = connection.execute(
-            "SELECT COUNT(*) FROM decks WHERE deckName = ?", (deckName,)
-        ).fetchone()
-        connection.close()
-
-        if duplicate_amount[0] != 0:
-            raise ValueError("This deck name is already in use")
-        elif len(deckName) <= 0:
+        if len(deckName) <= 0:
             raise ValueError("Deck name cannot be empty")
         elif len(deckName) > 50:
             raise ValueError("Deck name must be less than 50 characters")
 
         return deckName
+
+
+def parseDecks(decks):
+    parsedDecks = []
+    for deck in decks:
+        parsedDeck = Deck(
+            deck["userID"], deck["deckName"], deck["numberOfCards"], deck["deckID"]
+        )
+        parsedDecks.append(parsedDeck)
+
+    return parsedDecks
 
 
 def db_connect():
