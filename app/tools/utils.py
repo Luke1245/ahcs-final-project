@@ -33,6 +33,30 @@ class User:
         return email
 
 
+class Deck:
+    def __init__(self, userID, deckName, numberOfCards=0, deckID=0):
+        self.deckID = deckID
+        self.userID = userID
+        self.deckName = self._validate_deck_name(deckName)
+        self.numberOfCards = numberOfCards
+
+    def _validate_deck_name(self, deckName):
+        connection = db_connect()
+        duplicate_amount = connection.execute(
+            "SELECT COUNT(*) FROM decks WHERE deckName = ?", (deckName,)
+        ).fetchone()
+        connection.close()
+
+        if duplicate_amount[0] != 0:
+            raise ValueError("This deck name is already in use")
+        elif len(deckName) <= 0:
+            raise ValueError("Deck name cannot be empty")
+        elif len(deckName) > 50:
+            raise ValueError("Deck name must be less than 50 characters")
+
+        return deckName
+
+
 def db_connect():
     connection = sqlite3.connect("database.db")
     # Allow dirrect access to returned data via name and index

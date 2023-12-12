@@ -19,6 +19,7 @@ def login_post():
     user_data = connection.execute(
         "SELECT * FROM users WHERE email = ?", (email,)
     ).fetchone()
+    connection.close()
 
     if user_data is None:
         flash("Invalid login details")
@@ -67,7 +68,7 @@ def logout():
     if session["email"] is None:
         flash("Not signed in")
         return redirect(url_for("auth.login"))
-    
+
     session["email"] = None
     flash("Logged out")
     return redirect(url_for("auth.login"))

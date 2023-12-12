@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
-from .tools.utils import User, db_connect
+from .tools.utils import User, Deck, db_connect
+import json
 
 main = Blueprint("main", __name__)
 
@@ -11,9 +12,42 @@ def list_decks():
     return render_template("index.html")
 
 
+@main.route("/add_deck", methods=["POST"])
+def add_deck_post():
+    if not session.get("email"):
+        return redirect(url_for("auth.login"))
+
+    deckName = (json.loads(request.data))["name"]
+
+    email = session.get("email")
+    connection = db_connect()
+    userID = (
+        connection.execute(
+            "SELECT userID FROM users WHERE email = ?", (email,)
+        ).fetchone()
+    )[0]
+    connection.close
+    try:
+        deck = Deck(userID, deckName)
+    except ValueError as error:
+        flash(str(error))
+        return redirect(url_for("main.list_decks"))
+    else:
+        connection = db_connect()
+        connection.execute(
+            "INSERT INTO decks (userID, deckName) VALUES (?, ?)",
+            (deck.userID, deck.deckName),
+        )
+        flash("Added new deck")
+        connection.commit()
+        connection.close()
+
+    return redirect("/login")
+
+
 @main.route("/add_card", methods=["POST"])
 def add_card_post():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
-    
+
     return redirect(url_for("main.list_decks"))
