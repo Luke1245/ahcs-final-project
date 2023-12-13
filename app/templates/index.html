@@ -6,14 +6,16 @@ content %}
     <thead>
       <tr>
         <th class="text-left">Deck Name</th>
-        <th>Number of Cards</th>
+        <th class="pr-11">Number of Cards</th>
+        <th>Delete Deck</th>
       </tr>
     </thead>
     <tbody>
       {% for deck in decks %}
       <tr>
         <td class="pr-11">{{ deck.deckName }}</td>
-        <td>{{ deck.numberOfCards}}</td>
+        <td class="">{{ deck.numberOfCards}}</td>
+        <td class="text-cerulean"><a href="/delete_deck?deckid={{deck.deckID}}">Delete</a></td>
       </tr>
       {% endfor %}
     </tbody>
