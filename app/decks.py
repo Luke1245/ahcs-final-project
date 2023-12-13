@@ -65,3 +65,24 @@ def add_card_post():
         return redirect(url_for("auth.login"))
 
     return redirect(url_for("main.list_decks"))
+
+@decks.route("/delete_deck", methods=["GET"])
+def delete_deck():
+    if not session.get("email"):
+        return redirect(url_for("auth.login"))
+    
+    args = request.args
+    deckID = args.get("deckid")
+    email = session.get("email")
+
+    try: 
+        userID = getUserID(email)
+    except ValueError:
+        return redirect(url_for("auth.login"))
+    
+    connection = db_connect()
+    connection.execute("DELETE FROM decks WHERE deckID = ? AND userID = ?", (deckID, userID))
+    connection.commit()
+    flash("Deleted deck")
+    return redirect(url_for("decks.list_decks"))
+    

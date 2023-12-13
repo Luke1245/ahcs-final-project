@@ -31,7 +31,7 @@ def login_post():
 
     session["email"] = email
 
-    return redirect(url_for("main.list_decks"))
+    return redirect(url_for("decks.list_decks"))
 
 
 @auth.route("/register")
