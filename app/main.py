@@ -45,7 +45,7 @@ def add_deck_post():
         deck = Deck(userID, deckName)
     except ValueError as error:
         flash(str(error))
-        return redirect(url_for("main.list_decks"))
+        return "Couldn't add deck", 400
     else:
         connection = db_connect()
         connection.execute(
@@ -56,7 +56,7 @@ def add_deck_post():
         connection.commit()
         connection.close()
 
-    return redirect("/login")
+    return "Added deck"
 
 
 @main.route("/add_card", methods=["POST"])
