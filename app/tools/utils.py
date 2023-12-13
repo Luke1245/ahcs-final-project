@@ -1,6 +1,8 @@
 import sqlite3
 from werkzeug.security import generate_password_hash
 
+FAMILIARITY_MAPPINGS = {1: "Unfamiliar", 2: "Recognised", 3: "Familiar", 4: "Memorised"}
+
 
 class User:
     def __init__(self, email, rawPassword, userID=0):
@@ -57,6 +59,31 @@ class Deck:
             raise ValueError("Deck name must be less than 50 characters")
 
         return deckName
+
+
+class Card:
+    def __init__(self, deckID, timeCreated, front, back, familiarity, cardID=0):
+        self.cardID = cardID
+        self.deckID = deckID
+        self.timeCreated = timeCreated
+        self.front = self._validate_text(front)
+        self.back = self._validate_text(back)
+        self.familiarity = self._validate_familiarity(familiarity)
+
+    def _validate_text(self, text):
+        if len(text) <= 0:
+            raise ValueError("Card sides cannot be empty")
+        elif len(text) > 2000:
+            raise ValueError("Card sides must be less than 2000 characters")
+
+        return text
+
+    def _validate_familiarity(self, familiarity):
+        for x in FAMILIARITY_MAPPINGS:
+            if x == familiarity:
+                return familiarity
+
+        raise ValueError("Familiarity must be valid value")
 
 
 def fetchDecks(session):

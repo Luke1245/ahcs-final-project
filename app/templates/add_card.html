@@ -7,15 +7,20 @@
           <form action="/add_card" method="post">
             <div>
               <label class="py-2">Deck:</label>
-              <select name="deck" id="deck">
+              <select class="border" name="deck" id="deck">
                 {% for deck in decks %}
                   <option value="{{deck.deckID}}">{{deck.deckName}}</option>
                 {% endfor %}
               </select>
-
+              <label class="py-2">Familiarity:</label>
+              <select class="border" name="familiarity" id="familiarity">
+                  <option value="1">Unfamiliar</option>
+                  <option value="2">Recognised</option>
+                  <option value="3">Familiar</option>
+                  <option value="4">Memorised</option>
+              </select>
               <label class="block py-2">Front</label>
               <textarea
-                type="text"
                 name="front"
                 class="border w-full focus:border-burnt-sienna focus:outline-none py-2 px-2 rounded-none font-mono"
                 autofocus=""
