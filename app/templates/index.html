@@ -4,14 +4,14 @@ content %}
   <table>
     <thead>
       <tr>
-        <th>Deck Name</th>
+        <th class="text-left">Deck Name</th>
         <th>Number of Cards</th>
       </tr>
     </thead>
     <tbody>
       {% for deck in decks %}
       <tr>
-        <td>{{ deck.deckName }}</td>
+        <td class="pr-10">{{ deck.deckName }}</td>
         <td>{{ deck.numberOfCards}}</td>
       </tr>
       {% endfor %}
