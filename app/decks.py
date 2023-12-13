@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
-from .tools.utils import User, Deck, db_connect, parseDecks, getUserID
+from .tools.utils import User, Deck, db_connect, fetchDecks, getUserID
 import json
 
 decks = Blueprint("decks", __name__)
@@ -10,18 +10,10 @@ def list_decks():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
 
-    connection = db_connect()
-    email = session.get("email")
     try:
-        userID = getUserID(email)
+        decks = fetchDecks(session)
     except ValueError:
         return redirect(url_for("auth.login"))
-
-    decks = connection.execute(
-        "SELECT * FROM decks WHERE userID = ? ", (userID,)
-    ).fetchall()
-    connection.close()
-    decks = parseDecks(decks)
 
     return render_template("index.html", decks=decks)
 
@@ -57,14 +49,6 @@ def add_deck_post():
         connection.close()
 
     return "Added deck"
-
-
-@decks.route("/add_card", methods=["POST"])
-def add_card_post():
-    if not session.get("email"):
-        return redirect(url_for("auth.login"))
-
-    return redirect(url_for("main.list_decks"))
 
 
 @decks.route("/delete_deck", methods=["GET"])

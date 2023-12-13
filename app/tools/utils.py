@@ -59,6 +59,23 @@ class Deck:
         return deckName
 
 
+def fetchDecks(session):
+    connection = db_connect()
+    email = session.get("email")
+    try:
+        userID = getUserID(email)
+    except ValueError:
+        raise ValueError("No users in table")
+
+    decks = connection.execute(
+        "SELECT * FROM decks WHERE userID = ? ", (userID,)
+    ).fetchall()
+    connection.close()
+
+    decks = parseDecks(decks)
+    return decks
+
+
 def parseDecks(decks):
     parsedDecks = []
     for deck in decks:

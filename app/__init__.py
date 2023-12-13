@@ -2,6 +2,7 @@ from flask import Flask
 from flask_session import Session
 from .auth import auth as auth_blueprint
 from .decks import decks as decks_blueprint
+from .cards import cards as cards_blueprint
 import os
 from dotenv import load_dotenv
 
@@ -20,5 +21,6 @@ def create_app():
 
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(decks_blueprint)
+    app.register_blueprint(cards_blueprint)
 
     return app
