@@ -59,6 +59,7 @@ def parseDecks(decks):
 
     return parsedDecks
 
+
 def getUserID(email):
     connection = db_connect()
     userID = connection.execute(
@@ -67,9 +68,9 @@ def getUserID(email):
 
     if userID is None:
         raise ValueError("No user found")
-    else: 
+    else:
         return userID[0]
-    
+
 
 def db_connect():
     connection = sqlite3.connect("database.db")
