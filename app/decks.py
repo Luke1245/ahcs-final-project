@@ -2,10 +2,10 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from .tools.utils import User, Deck, db_connect, parseDecks, getUserID
 import json
 
-main = Blueprint("main", __name__)
+decks = Blueprint("decks", __name__)
 
 
-@main.route("/")
+@decks.route("/")
 def list_decks():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
@@ -26,7 +26,7 @@ def list_decks():
     return render_template("index.html", decks=decks)
 
 
-@main.route("/add_deck", methods=["POST"])
+@decks.route("/add_deck", methods=["POST"])
 def add_deck_post():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
@@ -59,7 +59,7 @@ def add_deck_post():
     return "Added deck"
 
 
-@main.route("/add_card", methods=["POST"])
+@decks.route("/add_card", methods=["POST"])
 def add_card_post():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
