@@ -34,14 +34,24 @@ class User:
 
 
 class Deck:
-    def __init__(self, userID, deckName, numberOfCards=0, deckID=0):
+    def __init__(self, userID, deckName, numberOfCards=0, deckID=0, newDeck=False):
         self.deckID = deckID
         self.userID = userID
-        self.deckName = self._validate_deck_name(deckName)
+        self.deckName = self._validate_deck_name(deckName, newDeck)
         self.numberOfCards = numberOfCards
 
-    def _validate_deck_name(self, deckName):
-        if len(deckName) <= 0:
+    def _validate_deck_name(self, deckName, newDeck):
+        if newDeck is True:
+            connection = db_connect()
+            duplicate_amount = connection.execute(
+                "SELECT COUNT(*) FROM decks WHERE deckName = ?", (deckName,)
+            ).fetchone()
+            connection.close()
+
+            if duplicate_amount[0] != 0:
+                raise ValueError("This deck name is already in use")
+
+        elif len(deckName) <= 0:
             raise ValueError("Deck name cannot be empty")
         elif len(deckName) > 50:
             raise ValueError("Deck name must be less than 50 characters")

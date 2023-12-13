@@ -42,7 +42,7 @@ def add_deck_post():
     )[0]
     connection.close
     try:
-        deck = Deck(userID, deckName)
+        deck = Deck(userID, deckName, newDeck=True)
     except ValueError as error:
         flash(str(error))
         return "Couldn't add deck", 400
