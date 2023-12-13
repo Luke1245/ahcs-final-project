@@ -15,7 +15,7 @@ content %}
       <tr>
         <td class="pr-11">{{ deck.deckName }}</td>
         <td class="">{{ deck.numberOfCards}}</td>
-        <td class="text-cerulean"><a href="/delete_deck?deckid={{deck.deckID}}">Delete</a></td>
+        <td class="text-burnt-sienna"><a href="/delete_deck?deckid={{deck.deckID}}">Delete</a></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -28,7 +28,7 @@ content %}
 {% endif %}
 <div class="absolute inset-x-0 bottom-0 pb-10 flex justify-center">
   <button
-    class="border-solid border-2 border-thistle font-semibold py-2 text-lg hover:bg-thistle px-4"
+    class="border-solid border-2 border-amber font-semibold py-2 text-lg hover:bg-amber px-4"
     onclick="createDeck()"
   >
     Add Deck
