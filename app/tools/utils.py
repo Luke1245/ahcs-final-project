@@ -64,11 +64,17 @@ class Deck:
 class Card:
     def __init__(self, deckID, timeCreated, front, back, familiarity, cardID=0):
         self.cardID = cardID
-        self.deckID = deckID
+        self.deckID = self._validate_deckID(deckID)
         self.timeCreated = timeCreated
         self.front = self._validate_text(front)
         self.back = self._validate_text(back)
         self.familiarity = self._validate_familiarity(familiarity)
+
+    def _validate_deckID(self, deckID):
+        if deckID is None:
+            raise ValueError("Must choose a deck")
+        
+        return deckID
 
     def _validate_text(self, text):
         if len(text) <= 0:
