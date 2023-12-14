@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
-from .tools.utils import User, Deck, db_connect, fetchDecks, getUserID
+from .tools.utils import User, Deck, db_connect, fetchDecks, getUserID, fetchCards, deleteCard
 import json
 
 decks = Blueprint("decks", __name__)
@@ -64,6 +64,10 @@ def delete_deck():
         userID = getUserID(email)
     except ValueError:
         return redirect(url_for("auth.login"))
+
+    cardsToDelete = fetchCards(deckID)
+    for card in cardsToDelete:
+        deleteCard(card.cardID)
 
     connection = db_connect()
     connection.execute(

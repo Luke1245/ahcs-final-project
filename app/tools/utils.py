@@ -102,7 +102,7 @@ def fetchDecks(session):
     parsedDecks = []
     for deck in decks:
         parsedDeck = Deck(
-            deck["userID"], deck["deckName"], deck["numberOfCards"], deck["deckID"]
+            int(deck["userID"]), deck["deckName"], int(deck["numberOfCards"]), int(deck["deckID"])
         )
         parsedDecks.append(parsedDeck)
 
@@ -120,17 +120,23 @@ def fetchCards(deckID):
     parsedCards = []
     for card in cards:
         parsedCard = Card(
-            card["deckID"],
+            int(card["deckID"]),
             card["timeCreated"],
             card["front"],
             card["back"],
-            card["familiarity"],
-            card["cardID"],
+            int(card["familiarity"]),
+            int(card["cardID"]),
         )
         parsedCards.append(parsedCard)
 
     return parsedCards
 
+def deleteCard(cardID):
+    connection = db_connect()
+
+    connection.execute("DELETE FROM cards WHERE cardID = ?", (str(cardID)))
+    connection.commit()
+    connection.close()
 
 def getUserID(email):
     connection = db_connect()
