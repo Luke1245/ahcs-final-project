@@ -113,7 +113,7 @@ def fetchCards(deckID):
     connection = db_connect()
 
     cards = connection.execute(
-        "SELECT * FROM cards WHERE deckID = ?", (deckID)
+        "SELECT * FROM cards WHERE deckID = ?", (deckID,)
     ).fetchall()
     connection.close()
 
@@ -133,8 +133,21 @@ def fetchCards(deckID):
 
 def deleteCard(cardID):
     connection = db_connect()
+    deckID = (connection.execute("SELECT deckID FROM cards WHERE cardID = ?", (cardID,)).fetchone())[0]
 
-    connection.execute("DELETE FROM cards WHERE cardID = ?", (str(cardID)))
+    currentNumberOfCards = (
+        connection.execute(
+            "SELECT numberOfCards FROM decks WHERE deckID = ?", (deckID,)
+        ).fetchone()
+    )[0]
+    decrementedNumberOfCards = currentNumberOfCards - 1
+
+    connection.execute(
+        "UPDATE decks SET numberOfCards = ? WHERE deckID = ?",
+        (decrementedNumberOfCards, deckID),
+    )
+
+    connection.execute("DELETE FROM cards WHERE cardID = ?", (cardID,))
     connection.commit()
     connection.close()
 

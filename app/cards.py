@@ -8,6 +8,7 @@ from .tools.utils import (
     fetchDecks,
     fetchCards,
     FAMILIARITY_MAPPINGS,
+    deleteCard
 )
 import datetime
 
@@ -88,3 +89,11 @@ def list_cards():
 def delete_card():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
+    
+    args = request.args
+    cardID = args.get("cardid")
+
+    deleteCard(str(cardID))
+
+    flash("Card deleted")
+    return redirect(url_for("decks.list_decks"))
