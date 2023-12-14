@@ -13,8 +13,8 @@ content %}
     <tbody>
       {% for deck in decks %}
       <tr>
-        <td class="pr-11">{{ deck.deckName }}</td>
-        <td class="">{{ deck.numberOfCards}}</td>
+        <td class="pr-11 text-burnt-sienna"><a href="/list_cards?deckid={{deck.deckID}}&deckname={{deck.deckName}}">{{ deck.deckName }}</a></td>
+        <td>{{ deck.numberOfCards}}</td>
         <td class="text-burnt-sienna"><a href="/delete_deck?deckid={{deck.deckID}}">Delete</a></td>
       </tr>
       {% endfor %}

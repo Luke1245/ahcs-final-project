@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block title %} Cards {% endblock %} {% block
+    content %}
+    {%if cards %}
+    <div class="h-screen flex items-center justify-center">
+      <table>
+        <thead>
+          <tr>
+            <th class="text-left">Card Front</th>
+            <th class="pr-11">Card Back</th>
+            <th class="pr-11">Familiarity</th>
+            <th>Delete Card</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for card in cards %}
+          <tr>
+            <td class="pr-11">{{ card.front }}</td>
+            <td>{{ card.back }}</td>
+            <td>{{ card.familiarity }}</td>
+            <td class="text-burnt-sienna"><a href="/delete_card?cardid={{card.cardID}}">Delete</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="h-screen flex items-center justify-center">
+      <h1 class="font-mono text-3xl">No cards</h1>
+    </div>
+    {% endif %}
+    {% endblock %}
+    

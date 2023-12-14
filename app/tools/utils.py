@@ -99,11 +99,6 @@ def fetchDecks(session):
     ).fetchall()
     connection.close()
 
-    decks = parseDecks(decks)
-    return decks
-
-
-def parseDecks(decks):
     parsedDecks = []
     for deck in decks:
         parsedDeck = Deck(
@@ -112,6 +107,29 @@ def parseDecks(decks):
         parsedDecks.append(parsedDeck)
 
     return parsedDecks
+
+
+def fetchCards(deckID):
+    connection = db_connect()
+
+    cards = connection.execute(
+        "SELECT * FROM cards WHERE deckID = ?", (deckID)
+    ).fetchall()
+    connection.close()
+
+    parsedCards = []
+    for card in cards:
+        parsedCard = Card(
+            card["deckID"],
+            card["timeCreated"],
+            card["front"],
+            card["back"],
+            card["familiarity"],
+            card["cardID"],
+        )
+        parsedCards.append(parsedCard)
+
+    return parsedCards
 
 
 def getUserID(email):
