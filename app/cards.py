@@ -76,11 +76,21 @@ def list_cards():
     deckID = args.get("deckid")
     deckName = args.get("deckname")
 
+    if deckID is None:
+        flash("Please select a deck to view")
+        return redirect(url_for("decks.list_decks"))
+
     cards = fetchCards(deckID)
 
     # Convert int card familiarities into their text varients
     for card in cards:
         card.familiarity = FAMILIARITY_MAPPINGS[card.familiarity]
+
+    for card in cards:
+        if len(card.front) > 30:
+            card.front = card.front[:30] + "..."
+        if len(card.back) > 30:
+            card.back = card.back[:30] + "..."
 
     return render_template("list_cards.html", cards=cards, deck=deckName)
 
@@ -92,6 +102,10 @@ def delete_card():
     
     args = request.args
     cardID = args.get("cardid")
+
+    if cardID is None:
+        flash("Please select a card to delete")
+        return redirect(url_for("decks.list_decks"))
 
     deleteCard(str(cardID))
 
