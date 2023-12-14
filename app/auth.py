@@ -7,11 +7,18 @@ auth = Blueprint("auth", __name__)
 
 @auth.route("/login")
 def login():
+    if session["email"] is not None:
+        flash("Please logout first")
+        return redirect(url_for("decks.list_decks"))
     return render_template("login.html")
 
 
 @auth.route("/login", methods=["POST"])
 def login_post():
+    if session["email"] is not None:
+        flash("Already logged in")
+        return redirect(url_for("decks.list_decks"))
+    
     email = request.form.get("email")
     password = request.form.get("password")
 
@@ -36,11 +43,18 @@ def login_post():
 
 @auth.route("/register")
 def register():
+    if session["email"] is not None:
+        flash("Please logout first")
+        return redirect(url_for("decks.list_decks"))
     return render_template("register.html")
 
 
 @auth.route("/register", methods=["POST"])
 def register_post():
+    if session["email"] is not None:
+        flash("Please logout first")
+        return redirect(url_for("decks.list_decks"))
+
     email = request.form.get("email")
     password = request.form.get("password")
 
