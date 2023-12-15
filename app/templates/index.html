@@ -1,37 +1,38 @@
-{% extends 'base.html' %} {% block title %} Decks {% endblock %} {% block
-content %}
-{%if decks %}
-<div class="h-screen flex items-center justify-center">
-  <table>
-    <thead>
-      <tr>
-        <th class="text-left">Deck Name</th>
-        <th class="pr-11">Number of Cards</th>
-        <th>Delete Deck</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for deck in decks %}
-      <tr>
-        <td class="pr-11 text-burnt-sienna"><a href="/list_cards?deckid={{deck.deckID}}&deckname={{deck.deckName}}">{{ deck.deckName }}</a></td>
-        <td>{{ deck.numberOfCards}}</td>
-        <td class="text-burnt-sienna"><a href="/delete_deck?deckid={{deck.deckID}}">Delete</a></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% else %}
-<div class="h-screen flex items-center justify-center">
-  <h1 class="font-mono text-3xl">No decks</h1>
-</div>
-{% endif %}
-<div class="absolute inset-x-0 bottom-0 pb-10 flex justify-center">
-  <button
-    class="border-solid border-2 border-amber font-semibold py-2 text-lg hover:bg-amber px-4"
-    onclick="createDeck()"
-  >
-    Add Deck
-  </button>
-</div>
-{% endblock %}
+{% extends 'base.html' %} 
+  {% block title %} Decks {% endblock %} 
+  {% block content %}
+    {% if decks %}
+      <div class="h-screen flex items-center justify-center">
+        <table>
+          <thead>
+            <tr>
+              <th class="text-left">Deck Name</th>
+              <th class="pr-11">Number of Cards</th>
+              <th>Delete Deck</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for deck in decks %}
+              <tr>
+                <td class="pr-11 text-burnt-sienna"><a href="/list_cards?deck_id={{deck.deck_id}}&deck_name={{deck.deck_name}}">{{ deck.deck_name }}</a></td>
+                <td>{{ deck.number_of_cards }}</td>
+                <td class="text-burnt-sienna"><a href="/delete_deck?deck_id={{deck.deck_id}}">Delete</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="h-screen flex items-center justify-center">
+        <h1 class="font-mono text-3xl">You have no decks</h1>
+      </div>
+    {% endif %}
+    <div class="absolute inset-x-0 bottom-0 pb-10 flex justify-center">
+      <button
+        class="border-solid border-2 border-amber font-semibold py-2 text-lg hover:bg-amber px-4"
+        onclick="add_deck()"
+      >
+        Add a Deck
+      </button>
+    </div>
+  {% endblock %}

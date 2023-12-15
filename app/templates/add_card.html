@@ -1,5 +1,6 @@
-{% extends 'base.html' %} {% block title %} Add a card {% endblock %} {%
-    block content %}
+{% extends 'base.html' %} 
+  {% block title %} Add a card {% endblock %} 
+  {% block content %}
     <div class="flex items-center min-h-screen">
       <div class="w-full max-w-4xl px-8 py-8 mx-auto bg-white border rounded-lg">
         <div class="max-w-full space-y-3">
@@ -7,13 +8,13 @@
           <form action="/add_card" method="post">
             <div>
               <label class="py-2">Deck:</label>
-              <select class="border" name="deck" id="deck">
+              <select class="border" name="deck_id">
                 {% for deck in decks %}
-                  <option value="{{deck.deckID}}">{{deck.deckName}}</option>
+                  <option value="{{deck.deck_id}}">{{ deck.deck_name }}</option>
                 {% endfor %}
               </select>
               <label class="py-2">Familiarity:</label>
-              <select class="border" name="familiarity" id="familiarity">
+              <select class="border" name="familiarity">
                   <option value="1">Unfamiliar</option>
                   <option value="2">Recognised</option>
                   <option value="3">Familiar</option>
@@ -49,5 +50,5 @@
         </div>
       </div>
     </div>
-    {% endblock %}
+  {% endblock %}
     

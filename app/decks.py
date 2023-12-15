@@ -1,5 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
-from .tools.utils import User, Deck, db_connect, fetchDecks, getUserID, fetchCards, deleteCard
+from .helpers import (
+    User,
+    Deck,
+    db_connect,
+    fetch_decks,
+    get_user_id,
+    fetch_cards,
+    delete_card_from_database,
+)
 import json
 
 decks = Blueprint("decks", __name__)
@@ -11,7 +19,7 @@ def list_decks():
         return redirect(url_for("auth.login"))
 
     try:
-        decks = fetchDecks(session)
+        decks = fetch_decks(session)
     except ValueError:
         return redirect(url_for("auth.login"))
 
@@ -23,32 +31,32 @@ def add_deck_post():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
 
-    deckName = (json.loads(request.data))["name"]
+    deck_name = (json.loads(request.data))["name"]
 
     email = session.get("email")
     connection = db_connect()
-    userID = (
+    user_id = (
         connection.execute(
-            "SELECT userID FROM users WHERE email = ?", (email,)
+            "SELECT user_id FROM users WHERE email = ?", (email,)
         ).fetchone()
     )[0]
     connection.close
     try:
-        deck = Deck(userID, deckName, newDeck=True)
+        deck = Deck(user_id, deck_name, new_deck=True)
     except ValueError as error:
         flash(str(error))
-        return "Couldn't add deck", 400
+        return "Error adding deck to database", 400
     else:
         connection = db_connect()
         connection.execute(
-            "INSERT INTO decks (userID, deckName) VALUES (?, ?)",
-            (deck.userID, deck.deckName),
+            "INSERT INTO decks (user_id, deck_name) VALUES (?, ?)",
+            (deck.user_id, deck.deck_name),
         )
         flash("Added new deck")
         connection.commit()
         connection.close()
 
-    return "Added deck"
+    return "Deck added to database"
 
 
 @decks.route("/delete_deck", methods=["GET"])
@@ -57,22 +65,22 @@ def delete_deck():
         return redirect(url_for("auth.login"))
 
     args = request.args
-    deckID = args.get("deckid")
+    deck_id = args.get("deck_id")
     email = session.get("email")
 
     try:
-        userID = getUserID(email)
+        user_id = get_user_id(email)
     except ValueError:
         return redirect(url_for("auth.login"))
 
-    cardsToDelete = fetchCards(deckID)
-    for card in cardsToDelete:
-        deleteCard(card.cardID)
+    cards_to_delete = fetch_cards(deck_id)
+    for card in cards_to_delete:
+        delete_card_from_database(card.card_id)
 
     connection = db_connect()
     connection.execute(
-        "DELETE FROM decks WHERE deckID = ? AND userID = ?", (deckID, userID)
+        "DELETE FROM decks WHERE deck_id = ? AND user_id = ?", (deck_id, user_id)
     )
     connection.commit()
-    flash("Deleted deck")
+    flash("Deck deleted")
     return redirect(url_for("decks.list_decks"))

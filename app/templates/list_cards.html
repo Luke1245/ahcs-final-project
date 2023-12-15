@@ -1,37 +1,38 @@
-{% extends 'base.html' %} {% block title %} Cards {% endblock %} {% block
-    content %}
-    {%if cards %}
-    <div class="h-screen flex items-center justify-center">
-      <table>
-        <thead>
-          <tr>
-            <th class="text-left">Card Front</th>
-            <th class="pr-11">Card Back</th>
-            <th class="pr-11">Familiarity</th>
-            <th>Delete Card</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for card in cards %}
-          <tr>
-            <td class="pr-11">{{ card.front }}</td>
-            <td>{{ card.back }}</td>
-            <td>{{ card.familiarity }}</td>
-            <td class="text-burnt-sienna"><a href="/delete_card?cardid={{card.cardID}}">Delete</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+{% extends 'base.html' %} 
+  {% block title %} Cards {% endblock %} 
+  {% block content %}
+    {% if cards %}
+      <div class="h-screen flex items-center justify-center">
+        <table>
+          <thead>
+            <tr>
+              <th class="text-left">Card Front</th>
+              <th class="pr-11">Card Back</th>
+              <th class="pr-11">Card Familiarity</th>
+              <th>Delete Card</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for card in cards %}
+              <tr>
+                <td class="pr-11">{{ card.front }}</td>
+                <td>{{ card.back }}</td>
+                <td>{{ card.familiarity }}</td>
+                <td class="text-burnt-sienna"><a href="/delete_card?card_id={{card.card_id}}">Delete</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     {% else %}
-    <div class="h-screen flex items-center justify-center">
-      <h1 class="font-mono text-3xl">No cards</h1>
-    </div>
+      <div class="h-screen flex items-center justify-center">
+        <h1 class="font-mono text-3xl">There are no cards in this deck</h1>
+      </div>
     {% endif %}
     <div class="absolute inset-x-0 bottom-0 pb-10 flex justify-center">
       <a href="/add_card">
-        <button class="border-solid border-2 border-amber font-semibold py-2 text-lg hover:bg-amber px-4">Add Card</button>
+        <button class="border-solid border-2 border-amber font-semibold py-2 text-lg hover:bg-amber px-4">Add a Card</button>
       </a>
     </div>
-    {% endblock %}
+  {% endblock %}
     

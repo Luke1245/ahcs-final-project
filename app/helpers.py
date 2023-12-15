@@ -5,18 +5,18 @@ FAMILIARITY_MAPPINGS = {1: "Unfamiliar", 2: "Recognised", 3: "Familiar", 4: "Mem
 
 
 class User:
-    def __init__(self, email, rawPassword, userID=0):
-        self.userID = userID
+    def __init__(self, email, raw_password, user_id=0):
+        self.user_id = user_id
         self.email = self._validate_email(email)
-        self.passwordHash = self._validate_and_hash_password(rawPassword)
+        self.password_hash = self._validate_and_hash_password(raw_password)
 
-    def _validate_and_hash_password(self, rawPassword):
-        if len(rawPassword) < 8:
+    def _validate_and_hash_password(self, raw_password):
+        if len(raw_password) < 8:
             raise ValueError("Password must be 8 characters or greater")
-        elif len(rawPassword) > 72:
+        elif len(raw_password) > 72:
             raise ValueError("Password must be less than 72 characters")
 
-        return generate_password_hash(rawPassword)
+        return generate_password_hash(raw_password)
 
     def _validate_email(self, email):
         connection = db_connect()
@@ -36,45 +36,47 @@ class User:
 
 
 class Deck:
-    def __init__(self, userID, deckName, numberOfCards=0, deckID=0, newDeck=False):
-        self.deckID = deckID
-        self.userID = userID
-        self.deckName = self._validate_deck_name(deckName, newDeck)
-        self.numberOfCards = numberOfCards
+    def __init__(
+        self, user_id, deck_name, number_of_cards=0, deck_id=0, new_deck=False
+    ):
+        self.deck_id = deck_id
+        self.user_id = user_id
+        self.deck_name = self._validate_deck_name(deck_name, new_deck)
+        self.number_of_cards = number_of_cards
 
-    def _validate_deck_name(self, deckName, newDeck):
-        if newDeck is True:
+    def _validate_deck_name(self, deck_name, new_deck):
+        if new_deck is True:
             connection = db_connect()
             duplicate_amount = connection.execute(
-                "SELECT COUNT(*) FROM decks WHERE deckName = ?", (deckName,)
+                "SELECT COUNT(*) FROM decks WHERE deck_name = ?", (deck_name,)
             ).fetchone()
             connection.close()
 
             if duplicate_amount[0] != 0:
                 raise ValueError("This deck name is already in use")
 
-        elif len(deckName) <= 0:
+        elif len(deck_name) <= 0:
             raise ValueError("Deck name cannot be empty")
-        elif len(deckName) > 50:
+        elif len(deck_name) > 50:
             raise ValueError("Deck name must be less than 50 characters")
 
-        return deckName
+        return deck_name
 
 
 class Card:
-    def __init__(self, deckID, timeCreated, front, back, familiarity, cardID=0):
-        self.cardID = cardID
-        self.deckID = self._validate_deckID(deckID)
-        self.timeCreated = timeCreated
+    def __init__(self, deck_id, time_created, front, back, familiarity, card_id=0):
+        self.card_id = card_id
+        self.deck_id = self._validate_deck_id(deck_id)
+        self.time_created = time_created
         self.front = self._validate_text(front)
         self.back = self._validate_text(back)
         self.familiarity = self._validate_familiarity(familiarity)
 
-    def _validate_deckID(self, deckID):
-        if deckID is None:
-            raise ValueError("Must choose a deck")
-        
-        return deckID
+    def _validate_deck_id(self, deck_id):
+        if deck_id is None:
+            raise ValueError("You must choose a deck")
+
+        return deck_id
 
     def _validate_text(self, text):
         if len(text) <= 0:
@@ -89,84 +91,93 @@ class Card:
             if x == familiarity:
                 return familiarity
 
-        raise ValueError("Familiarity must be valid value")
+        raise ValueError("Familiarity must be a valid value")
 
 
-def fetchDecks(session):
+def fetch_decks(session):
     connection = db_connect()
     email = session.get("email")
     try:
-        userID = getUserID(email)
+        user_id = get_user_id(email)
     except ValueError:
         raise ValueError("No users in table")
 
     decks = connection.execute(
-        "SELECT * FROM decks WHERE userID = ? ", (userID,)
+        "SELECT * FROM decks WHERE user_id = ? ", (user_id,)
     ).fetchall()
     connection.close()
 
-    parsedDecks = []
+    parsed_decks = []
     for deck in decks:
-        parsedDeck = Deck(
-            int(deck["userID"]), deck["deckName"], int(deck["numberOfCards"]), int(deck["deckID"])
+        parsed_deck = Deck(
+            int(deck["user_id"]),
+            deck["deck_name"],
+            int(deck["number_of_cards"]),
+            int(deck["deck_id"]),
         )
-        parsedDecks.append(parsedDeck)
+        parsed_decks.append(parsed_deck)
 
-    return parsedDecks
+    return parsed_decks
 
 
-def fetchCards(deckID):
+def fetch_cards(deck_id):
     connection = db_connect()
 
     cards = connection.execute(
-        "SELECT * FROM cards WHERE deckID = ?", (deckID,)
+        "SELECT * FROM cards WHERE deck_id = ?", (deck_id,)
     ).fetchall()
     connection.close()
 
-    parsedCards = []
+    parsed_cards = []
     for card in cards:
-        parsedCard = Card(
-            int(card["deckID"]),
-            card["timeCreated"],
+        parsed_card = Card(
+            int(card["deck_id"]),
+            card["time_created"],
             card["front"],
             card["back"],
             int(card["familiarity"]),
-            int(card["cardID"]),
+            int(card["card_id"]),
         )
-        parsedCards.append(parsedCard)
+        parsed_cards.append(parsed_card)
 
-    return parsedCards
+    return parsed_cards
 
-def deleteCard(cardID):
+
+def delete_card_from_database(card_id):
     connection = db_connect()
-    deckID = (connection.execute("SELECT deckID FROM cards WHERE cardID = ?", (cardID,)).fetchone())[0]
-
-    currentNumberOfCards = (
+    deck_id = (
         connection.execute(
-            "SELECT numberOfCards FROM decks WHERE deckID = ?", (deckID,)
+            "SELECT deck_id FROM cards WHERE card_id = ?", (card_id,)
         ).fetchone()
     )[0]
-    decrementedNumberOfCards = currentNumberOfCards - 1
+
+    current_number_of_cards = (
+        connection.execute(
+            "SELECT number_of_cards FROM decks WHERE deck_id = ?", (deck_id,)
+        ).fetchone()
+    )[0]
+    decremented_number_of_cards = current_number_of_cards - 1
 
     connection.execute(
-        "UPDATE decks SET numberOfCards = ? WHERE deckID = ?",
-        (decrementedNumberOfCards, deckID),
+        "UPDATE decks SET number_of_cards = ? WHERE deck_id = ?",
+        (decremented_number_of_cards, deck_id),
     )
 
-    connection.execute("DELETE FROM cards WHERE cardID = ?", (cardID,))
+    connection.execute("DELETE FROM cards WHERE card_id = ?", (card_id,))
     connection.commit()
     connection.close()
 
-def getUserID(email):
+
+def get_user_id(email):
     connection = db_connect()
-    userID = connection.execute(
-        "SELECT userID FROM users WHERE email = ?", (email,)
+    user_id = connection.execute(
+        "SELECT user_id FROM users WHERE email = ?", (email,)
     ).fetchone()
 
-    if userID is None:
+    if user_id is None:
         raise ValueError("No user found")
     else:
-        return userID[0]
+        return user_id[0]
 
 
 def db_connect():
