@@ -11,9 +11,10 @@ def login():
         if session["email"] is not None:
             flash("You need to be logged out to perform this action")
             return redirect(url_for("decks.list_decks"))
-        return render_template("login.html")
     except KeyError:
-        return render_template("login.html")
+        pass
+    
+    return render_template("login.html")
 
 
 @auth.route("/login", methods=["POST"])
@@ -91,8 +92,11 @@ def register_post():
 
 @auth.route("/logout")
 def logout():
-    if session["email"] is None:
-        flash("You are not signed in")
+    try:
+        if session["email"] is None:
+            flash("You are not signed in")
+            return redirect(url_for("auth.login"))
+    except KeyError:
         return redirect(url_for("auth.login"))
 
     session["email"] = None

@@ -1,10 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from .helpers import (
-    User,
-    Deck,
     Card,
     db_connect,
-    get_user_id,
     fetch_decks,
     fetch_cards,
     FAMILIARITY_MAPPINGS,
