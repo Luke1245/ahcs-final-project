@@ -48,7 +48,7 @@ class Deck:
         if new_deck is True:
             connection = db_connect()
             duplicate_amount = connection.execute(
-                "SELECT COUNT(*) FROM decks WHERE deck_name = ?", (deck_name,)
+                "SELECT COUNT(*) FROM decks WHERE deck_name = ? AND user_id = ?", (deck_name, self.user_id)
             ).fetchone()
             connection.close()
 
