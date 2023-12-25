@@ -33,6 +33,11 @@
       <a href="/add_card">
         <button class="border-solid border-2 border-amber font-semibold py-2 text-lg hover:bg-amber px-4">Add a Card</button>
       </a>
+      {% if cards %}
+        <a href="/revise_deck?deck_id={{cards[0].deck_id}}">
+          <button class="border-solid border-2 border-amber font-semibold py-2 text-lg hover:bg-amber px-4">Revise Deck</button>
+        </a>
+      {% endif %}
     </div>
   {% endblock %}
     

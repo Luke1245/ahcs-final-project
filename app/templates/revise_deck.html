@@ -1,0 +1,27 @@
+{% extends 'base.html' %} 
+  {% block title %} Revise a deck {% endblock %} 
+  {% block content %}
+    <div class="flex items-center min-h-screen">
+      <div class="w-full max-w-4xl px-8 py-8 mx-auto bg-white border rounded-lg">
+        <div class="max-w-full space-y-3">
+            <div>
+              <label class="block py-2">Front</label>
+            </div>
+            <div>
+              <label class="block py-2">Back</label>
+            </div>
+            <div class="pt-10">
+              <button
+                type="submit"
+                class="bg-burnt-sienna border w-full py-2 px-2 rounded-none"
+                value="Submit"
+              >
+                Next Card
+              </button>
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+    

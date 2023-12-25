@@ -84,3 +84,11 @@ def delete_deck():
     connection.commit()
     flash("Deck deleted")
     return redirect(url_for("decks.list_decks"))
+
+@decks.route("/revise_deck", methods=["GET"])
+def revise_deck():
+    if not session.get("email"):
+        return redirect(url_for("auth.login"))
+    
+    args = request.args
+    
