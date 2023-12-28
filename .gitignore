@@ -4,6 +4,7 @@ instance/
 flask_session
 
 __pycache__/
+venv
 
 # Replit stuff
 .pythonlibs
