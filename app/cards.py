@@ -116,7 +116,24 @@ def update_card():
         return redirect(url_for("auth.login"))
 
     deck_id = request.form.get("deck_id")
-    card_id = request.form.get("card_id")
-    familiarity = request.form.get("familiarity")
+    next_card_id = request.form.get("next_card_id")
+    current_card_id = request.form.get("current_card_id")
+    current_familiarity = int(request.form.get("current_familiarity"))
+    familiarity_update = request.form.get("familiarity_update")
+    new_familiarity = current_familiarity
 
-    return redirect(url_for("decks.revise_deck", deck_id = deck_id, card_id = card_id))
+    if familiarity_update == "known" and current_familiarity < 4:
+        new_familiarity = current_familiarity + 1
+    elif familiarity_update == "unknown" and current_familiarity > 1:
+        new_familiarity = current_familiarity - 1
+
+    connection = db_connect()
+    connection.execute(
+        "UPDATE cards SET familiarity = ? WHERE card_id = ?",
+        (new_familiarity, current_card_id),
+    )
+    connection.commit()
+    connection.close()
+
+    print(next_card_id)
+    return redirect(url_for("decks.revise_deck", deck_id = deck_id, card_id = next_card_id))

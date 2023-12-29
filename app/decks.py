@@ -94,12 +94,12 @@ def revise_deck():
 
     args = request.args
     deck_id = args.get("deck_id")
-    card_id = args.get("card_id")
+    current_card_id = args.get("card_id")
 
-    if card_id is not None:
-        card_id = int(card_id)
+    if current_card_id is not None:
+        current_card_id = int(current_card_id)
 
-    if card_id == -1:
+    if current_card_id == -1:
         flash("Deck reviewed")
         return redirect(url_for("decks.list_decks"))
     
@@ -109,11 +109,11 @@ def revise_deck():
 
     current_card = None
 
-    if card_id is None:
+    if current_card_id is None:
         current_card = cards[0]
     else:
         for card in cards:
-            if card.card_id == card_id:
+            if card.card_id == current_card_id:
                 current_card = card
 
     next_card_id = -1
@@ -124,5 +124,5 @@ def revise_deck():
                 next_card_id = cards[i + 1].card_id
             except IndexError:
                 break
-
-    return render_template("revise_deck.html", card=current_card, card_id=next_card_id)
+            
+    return render_template("revise_deck.html", card=current_card, next_card_id=next_card_id)
