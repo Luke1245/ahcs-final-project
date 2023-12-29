@@ -22,33 +22,38 @@
               >
                 Show
               </button>
-              <form action="/update_card">
-                <button
-                  type="submit"
-                  name="familiarity"
-                  class="bg-burnt-sienna border w-full py-2 px-2 rounded-none"
-                  value="known"
-                >
-                  Known
-                </button>
+              <form method="post" action="/update_card">
+                  <input class="hidden" type="number" id="deck_id" name="deck_id" value="{{ card.deck_id }}">
+                  <input class="hidden" type="number" id="card_id" name="card_id" value="{{ card_id }}">
+                  <button
+                    type="submit"
+                    name="familiarity"
+                    class="bg-burnt-sienna border w-full py-2 px-2 rounded-none"
+                    value="known"
+                  >
+                    Known
+                  </button>
               </form>
-              <form action="update_card">
-                <button
-                  type="submit"
-                  name="familiarity"
-                  class="bg-burnt-sienna border w-full py-2 px-2 rounded-none"
-                  value="unknown"
-                >
-                  Unknown
-                </button>
+              <form method="post" action="/update_card">
+                  <input class="hidden" type="number" id="deck_id" name="deck_id" value="{{ card.deck_id }}">
+                  <input class="hidden" type="number" id="card_id" name="card_id" value="{{ card_id }}">
+                  <button
+                    type="submit"
+                    name="familiarity"
+                    class="bg-burnt-sienna border w-full py-2 px-2 rounded-none"
+                    value="unknown"
+                  >
+                    Unknown
+                  </button>
+                </a>
               </form>
               <a href="revise_deck?deck_id={{ card.deck_id }}&card_id={{ card_id }}">
-              <button
-                type="button"
-                class="bg-amber border w-fit-content py-2 px-2 rounded-none"
-              >
-                Next Card
-              </button>
+                <button
+                  type="button"
+                  class="bg-amber border w-fit-content py-2 px-2 rounded-none"
+                >
+                  Next Card
+                </button>
               </a>
             </div>
             </div>

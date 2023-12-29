@@ -115,5 +115,8 @@ def update_card():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
 
-    # TODO
-    # Update cards familiarity values
+    deck_id = request.form.get("deck_id")
+    card_id = request.form.get("card_id")
+    familiarity = request.form.get("familiarity")
+
+    return redirect(url_for("decks.revise_deck", deck_id = deck_id, card_id = card_id))

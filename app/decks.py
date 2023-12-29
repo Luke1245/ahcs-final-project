@@ -99,16 +99,15 @@ def revise_deck():
     if card_id is not None:
         card_id = int(card_id)
 
-    # TODO
-    # Handle card_id = -1 case (finished deck, redirect to page with flash or similar)
+    if card_id == -1:
+        flash("Deck reviewed")
+        return redirect(url_for("decks.list_decks"))
+    
 
     cards = fetch_cards(deck_id)
     cards = sort_cards(cards)
 
     current_card = None
-
-    for x in cards:
-        print(f"CARD ID: {x.card_id}")
 
     if card_id is None:
         current_card = cards[0]
