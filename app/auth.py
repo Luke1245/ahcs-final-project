@@ -13,7 +13,7 @@ def login():
             return redirect(url_for("decks.list_decks"))
     except KeyError:
         pass
-    
+
     return render_template("login.html")
 
 

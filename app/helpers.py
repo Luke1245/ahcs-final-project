@@ -48,7 +48,8 @@ class Deck:
         if new_deck is True:
             connection = db_connect()
             duplicate_amount = connection.execute(
-                "SELECT COUNT(*) FROM decks WHERE deck_name = ? AND user_id = ?", (deck_name, self.user_id)
+                "SELECT COUNT(*) FROM decks WHERE deck_name = ? AND user_id = ?",
+                (deck_name, self.user_id),
             ).fetchone()
             connection.close()
 
@@ -141,6 +142,25 @@ def fetch_cards(deck_id):
         parsed_cards.append(parsed_card)
 
     return parsed_cards
+
+
+def sort_cards(cards):
+    n = len(cards)
+    swapped = False
+
+    for i in range(n - 1):
+        for j in range(0, n - i - 1):
+            if cards[j].familiarity > cards[j + 1].familiarity:
+                swapped = True
+                tmp = cards[j]
+
+                cards[j] = cards[j + 1]
+                cards[j + 1] = tmp
+
+        if not swapped:
+            return cards
+
+    return cards
 
 
 def delete_card_from_database(card_id):

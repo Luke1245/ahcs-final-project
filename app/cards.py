@@ -108,3 +108,12 @@ def delete_card():
 
     flash("Card deleted")
     return redirect(url_for("decks.list_decks"))
+
+
+@cards.route("/update_card", methods=["POST"])
+def update_card():
+    if not session.get("email"):
+        return redirect(url_for("auth.login"))
+
+    # TODO
+    # Update cards familiarity values

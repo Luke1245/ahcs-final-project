@@ -6,6 +6,7 @@ from .helpers import (
     fetch_decks,
     get_user_id,
     fetch_cards,
+    sort_cards,
     delete_card_from_database,
 )
 import json
@@ -85,10 +86,44 @@ def delete_deck():
     flash("Deck deleted")
     return redirect(url_for("decks.list_decks"))
 
+
 @decks.route("/revise_deck", methods=["GET"])
 def revise_deck():
     if not session.get("email"):
         return redirect(url_for("auth.login"))
-    
+
     args = request.args
-    
+    deck_id = args.get("deck_id")
+    card_id = args.get("card_id")
+
+    if card_id is not None:
+        card_id = int(card_id)
+
+    # TODO
+    # Handle card_id = -1 case (finished deck, redirect to page with flash or similar)
+
+    cards = fetch_cards(deck_id)
+    cards = sort_cards(cards)
+
+    current_card = None
+
+    for x in cards:
+        print(f"CARD ID: {x.card_id}")
+
+    if card_id is None:
+        current_card = cards[0]
+    else:
+        for card in cards:
+            if card.card_id == card_id:
+                current_card = card
+
+    next_card_id = -1
+
+    for i in range(len(cards)):
+        if cards[i].card_id == current_card.card_id:
+            try:
+                next_card_id = cards[i + 1].card_id
+            except IndexError:
+                break
+
+    return render_template("revise_deck.html", card=current_card, card_id=next_card_id)

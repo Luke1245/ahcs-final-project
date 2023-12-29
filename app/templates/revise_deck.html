@@ -5,19 +5,51 @@
       <div class="w-full max-w-4xl px-8 py-8 mx-auto bg-white border rounded-lg">
         <div class="max-w-full space-y-3">
             <div>
-              <label class="block py-2">Front</label>
+              <label class="block py-2 font-bold">Front</label>
+              <p>{{  card.front }}</p>
             </div>
-            <div>
-              <label class="block py-2">Back</label>
+            <div id ="card_back" class="hidden">
+              <label class="block py-2 font-bold">Back</label>
+              <p>{{  card.back }}</p>
             </div>
-            <div class="pt-10">
+            <div class="pt-10 flex flex-col items-center">
               <button
-                type="submit"
-                class="bg-burnt-sienna border w-full py-2 px-2 rounded-none"
-                value="Submit"
+                type="button"
+                id = "card_state"
+                class="bg-amber border w-fit-content py-2 px-2 rounded-none"
+                value="known"
+                onclick="change_card_state()"
+              >
+                Show
+              </button>
+              <form action="/update_card">
+                <button
+                  type="submit"
+                  name="familiarity"
+                  class="bg-burnt-sienna border w-full py-2 px-2 rounded-none"
+                  value="known"
+                >
+                  Known
+                </button>
+              </form>
+              <form action="update_card">
+                <button
+                  type="submit"
+                  name="familiarity"
+                  class="bg-burnt-sienna border w-full py-2 px-2 rounded-none"
+                  value="unknown"
+                >
+                  Unknown
+                </button>
+              </form>
+              <a href="revise_deck?deck_id={{ card.deck_id }}&card_id={{ card_id }}">
+              <button
+                type="button"
+                class="bg-amber border w-fit-content py-2 px-2 rounded-none"
               >
                 Next Card
               </button>
+              </a>
             </div>
             </div>
         </div>
