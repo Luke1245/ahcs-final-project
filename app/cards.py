@@ -61,7 +61,7 @@ def add_card_post():
         ).fetchone()
     )[0]
 
-    # Create seperate incremented variable for readability reasons 
+    # Create seperate incremented variable for readability reasons
     incremented_number_of_cards = current_number_of_cards + 1
 
     # Add the new card into the decks
@@ -151,7 +151,7 @@ def process_next_card():
     current_card_id = request.form.get("current_card_id")
     current_familiarity = int(request.form.get("current_familiarity"))
     familiarity_update = request.form.get("familiarity_update")
-    # Handles case of the familiarity values being at either extremes 
+    # Handles case of the familiarity values being at either extremes
     new_familiarity = current_familiarity
 
     # Check conditions of the users familiarity with the card
@@ -172,4 +172,4 @@ def process_next_card():
     connection.close()
 
     # Redirect user to the next card in the deck
-    return redirect(url_for("decks.revise_deck", deck_id = deck_id, card_id = next_card_id))
+    return redirect(url_for("decks.revise_deck", deck_id=deck_id, card_id=next_card_id))
