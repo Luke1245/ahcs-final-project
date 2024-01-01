@@ -1,6 +1,7 @@
 import sqlite3
 from werkzeug.security import generate_password_hash
 
+# Mapping of integer familiarity values to human readable text values
 FAMILIARITY_MAPPINGS = {1: "Unfamiliar", 2: "Recognised", 3: "Familiar", 4: "Memorised"}
 
 
@@ -16,15 +17,18 @@ class User:
         elif len(raw_password) > 72:
             raise ValueError("Password must be less than 72 characters")
 
+        # Hash password using werkzueg security
         return generate_password_hash(raw_password)
 
     def _validate_email(self, email):
         connection = db_connect()
+        # Retrieve amount of user records with current email in database
         duplicate_amount = connection.execute(
             "SELECT COUNT(*) FROM users WHERE email = ?", (email,)
         ).fetchone()
         connection.close()
 
+        # If duplicate_amount is not 0 then this email is already in use
         if duplicate_amount[0] != 0:
             raise ValueError("This email is already registered")
         elif len(email) < 5:
@@ -45,14 +49,17 @@ class Deck:
         self.number_of_cards = number_of_cards
 
     def _validate_deck_name(self, deck_name, new_deck):
+        # Only check if duplicate if class is being used to add a new deck
         if new_deck is True:
             connection = db_connect()
+            # Retrieve amount of deck records with current deck name in database
             duplicate_amount = connection.execute(
                 "SELECT COUNT(*) FROM decks WHERE deck_name = ? AND user_id = ?",
                 (deck_name, self.user_id),
             ).fetchone()
             connection.close()
 
+            # If duplicate_amount is not 0 then this deck name is already in use
             if duplicate_amount[0] != 0:
                 raise ValueError("This deck name is already in use")
 
@@ -74,6 +81,7 @@ class Card:
         self.familiarity = self._validate_familiarity(familiarity)
 
     def _validate_deck_id(self, deck_id):
+        # Check if deck_id is supplied
         if deck_id is None:
             raise ValueError("You must choose a deck")
 
@@ -88,6 +96,7 @@ class Card:
         return text
 
     def _validate_familiarity(self, familiarity):
+        # Make sure familiarity is a valid value from 1 - 4
         for x in FAMILIARITY_MAPPINGS:
             if x == familiarity:
                 return familiarity
@@ -99,16 +108,21 @@ def fetch_decks(session):
     connection = db_connect()
     email = session.get("email")
     try:
+        # Fetch user_id via users email
         user_id = get_user_id(email)
     except ValueError:
-        raise ValueError("No users in table")
+        raise ValueError("No users in found")
 
+    # Get all decks that the user owns
     decks = connection.execute(
         "SELECT * FROM decks WHERE user_id = ? ", (user_id,)
     ).fetchall()
     connection.close()
 
+    # Initalise empty array for the parsed decks
     parsed_decks = []
+
+    # Convert each database deck entry into a deck class object
     for deck in decks:
         parsed_deck = Deck(
             int(deck["user_id"]),
@@ -124,12 +138,16 @@ def fetch_decks(session):
 def fetch_cards(deck_id):
     connection = db_connect()
 
+    # Retrieve all cards for given deck_id
     cards = connection.execute(
         "SELECT * FROM cards WHERE deck_id = ?", (deck_id,)
     ).fetchall()
     connection.close()
 
+    # Initalise empty array for parsed_cards
     parsed_cards = []
+
+    # Convert each database card entry into a card class object
     for card in cards:
         parsed_card = Card(
             int(card["deck_id"]),
@@ -145,6 +163,7 @@ def fetch_cards(deck_id):
 
 
 def sort_cards(cards):
+    # Bubble sort
     n = len(cards)
     swapped = False
 
@@ -165,24 +184,29 @@ def sort_cards(cards):
 
 def delete_card_from_database(card_id):
     connection = db_connect()
+    # Fetch deck_id for the given card to change amount of cards in deck later
     deck_id = (
         connection.execute(
             "SELECT deck_id FROM cards WHERE card_id = ?", (card_id,)
         ).fetchone()
     )[0]
 
+    # Retrieve current number of cards in deck
     current_number_of_cards = (
         connection.execute(
             "SELECT number_of_cards FROM decks WHERE deck_id = ?", (deck_id,)
         ).fetchone()
     )[0]
+    # Create seperate decremented variable for readability reasons
     decremented_number_of_cards = current_number_of_cards - 1
 
+    # Update the number of cards within the deck
     connection.execute(
         "UPDATE decks SET number_of_cards = ? WHERE deck_id = ?",
         (decremented_number_of_cards, deck_id),
     )
 
+    # Delete card from database
     connection.execute("DELETE FROM cards WHERE card_id = ?", (card_id,))
     connection.commit()
     connection.close()
@@ -190,10 +214,12 @@ def delete_card_from_database(card_id):
 
 def get_user_id(email):
     connection = db_connect()
+    # Retrieve user_id via users email
     user_id = connection.execute(
         "SELECT user_id FROM users WHERE email = ?", (email,)
     ).fetchone()
 
+    # Check if a user is registered with this email
     if user_id is None:
         raise ValueError("No user found")
     else:
@@ -201,6 +227,7 @@ def get_user_id(email):
 
 
 def db_connect():
+    # Use sqlite to connect to SQ(Lite) database file
     connection = sqlite3.connect("database.db")
     # Allow dirrect access to returned data via name and index
     connection.row_factory = sqlite3.Row
