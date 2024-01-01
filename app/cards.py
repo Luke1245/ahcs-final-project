@@ -139,8 +139,8 @@ def delete_card():
     return redirect(url_for("decks.list_decks"))
 
 
-@cards.route("/update_card", methods=["POST"])
-def update_card():
+@cards.route("/process_next_card", methods=["POST"])
+def process_next_card():
     # Checks if user is logged in or not
     if not session.get("email"):
         # Redirect user to login page

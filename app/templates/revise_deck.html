@@ -22,7 +22,7 @@
               >
                 Show
               </button>
-              <form method="post" action="/update_card">
+              <form method="post" action="/process_next_card">
                   <input class="hidden" type="number" id="deck_id" name="deck_id" value="{{ card.deck_id }}">
                   <input class="hidden" type="number" id="next_card_id" name="next_card_id" value="{{ next_card_id }}">
                   <input class="hidden" type="number" id="current_familiarity" name="current_familiarity" value="{{ card.familiarity }}">
@@ -36,7 +36,7 @@
                     Known
                   </button>
               </form>
-              <form method="post" action="/update_card">
+              <form method="post" action="/process_next_card">
                   <input class="hidden" type="number" id="deck_id" name="deck_id" value="{{ card.deck_id }}">
                   <input class="hidden" type="number" id="next_card_id" name="next_card_id" value="{{ next_card_id }}">
                   <input class="hidden" type="number" id="current_familiarity" name="current_familiarity" value="{{ card.familiarity }}">
