@@ -14,9 +14,9 @@
           <tbody>
             {% for deck in decks %}
               <tr>
-                <td class="pr-11 text-burnt-sienna"><a href="/list_cards?deck_id={{deck.deck_id}}&deck_name={{deck.deck_name}}">{{ deck.deck_name }}</a></td>
-                <td>{{ deck.number_of_cards }}</td>
-                <td class="text-burnt-sienna"><a href="/delete_deck?deck_id={{deck.deck_id}}">Delete</a></td>
+                <td class="pr-11 text-burnt-sienna"><a href="/list_cards?deck_id={{deck.get_deck_id()}}&deck_name={{deck.get_deck_name()}}">{{ deck.get_deck_name() }}</a></td>
+                <td>{{ deck.get_number_of_cards() }}</td>
+                <td class="text-burnt-sienna"><a href="/delete_deck?deck_id={{deck.get_deck_id()}}">Delete</a></td>
               </tr>
             {% endfor %}
           </tbody>

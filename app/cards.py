@@ -57,7 +57,7 @@ def add_card_post():
     # Get current number of cards that are in the deck
     current_number_of_cards = (
         connection.execute(
-            "SELECT number_of_cards FROM decks WHERE deck_id = ?", (card.deck_id)
+            "SELECT number_of_cards FROM decks WHERE deck_id = ?", (card.get_deck_id())
         ).fetchone()
     )[0]
 
@@ -67,12 +67,18 @@ def add_card_post():
     # Add the new card into the decks
     connection.execute(
         "INSERT INTO cards (deck_id, time_created, front, back, familiarity) VALUES (?, ?, ?, ?, ?)",
-        (card.deck_id, card.time_created, card.front, card.back, card.familiarity),
+        (
+            card.get_deck_id(),
+            card.get_time_created(),
+            card.get_front(),
+            card.get_back(),
+            card.get_familiarity(),
+        ),
     )
     # Update the number of cards within the deck
     connection.execute(
         "UPDATE decks SET number_of_cards = ? WHERE deck_id = ?",
-        (incremented_number_of_cards, card.deck_id),
+        (incremented_number_of_cards, card.get_deck_id()),
     )
     connection.commit()
     connection.close()
@@ -101,15 +107,15 @@ def list_cards():
 
     # Convert int card familiaritiy values into their text versions
     for card in cards:
-        card.familiarity = FAMILIARITY_MAPPINGS[card.familiarity]
+        card.set_familiarity(FAMILIARITY_MAPPINGS[card.get_familiarity()])
 
     for card in cards:
         # Check if the card text is greater than 30
-        if len(card.front) > 30:
+        if len(card.get_front()) > 30:
             # Trim the card length with ellipses
-            card.front = card.front[:30] + "..."
-        if len(card.back) > 30:
-            card.back = card.back[:30] + "..."
+            card.set_front(card.front[:30] + "...")
+        if len(card.get_front()) > 30:
+            card.set_back(card.back[:30] + "...")
 
     # Render the list of cards for user supplied deck
     return render_template("list_cards.html", cards=cards, deck=deck_name)

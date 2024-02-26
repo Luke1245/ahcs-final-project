@@ -3,7 +3,7 @@ from .helpers import (
     Deck,
     db_connect,
     fetch_decks,
-    get_user_id,
+    get_user_id_by_email,
     fetch_cards,
     sort_cards,
     delete_card_from_database,
@@ -43,11 +43,8 @@ def add_deck_post():
 
     email = session.get("email")
     connection = db_connect()
-    user_id = (
-        connection.execute(
-            "SELECT user_id FROM users WHERE email = ?", (email,)
-        ).fetchone()
-    )[0]
+
+    user_id = get_user_id_by_email(email)
     connection.close
 
     try:
@@ -62,7 +59,7 @@ def add_deck_post():
         # Add deck to database
         connection.execute(
             "INSERT INTO decks (user_id, deck_name) VALUES (?, ?)",
-            (deck.user_id, deck.deck_name),
+            (deck.get_user_id(), deck.get_deck_name()),
         )
         flash("Added new deck")
         connection.commit()
@@ -84,7 +81,7 @@ def delete_deck():
 
     try:
         # Fetch user_id from databse via user email
-        user_id = get_user_id(email)
+        user_id = get_user_id_by_email(email)
     except ValueError:
         # Redirect user to login page
         return redirect(url_for("auth.login"))
@@ -93,7 +90,7 @@ def delete_deck():
     cards_to_delete = fetch_cards(deck_id)
     for card in cards_to_delete:
         # Delete current card from database, to avoid stranded data
-        delete_card_from_database(card.card_id)
+        delete_card_from_database(card.get_card_id())
 
     connection = db_connect()
     # Finally, remove deck from database
@@ -141,7 +138,7 @@ def revise_deck():
     else:
         # Find card within array of cards
         for card in cards:
-            if card.card_id == current_card_id:
+            if card.get_card_id() == current_card_id:
                 current_card = card
 
     # If below loop doesn't find value, then deck is finished
@@ -149,10 +146,10 @@ def revise_deck():
 
     for i in range(len(cards)):
         # Locate current card within array
-        if cards[i].card_id == current_card.card_id:
+        if cards[i].get_card_id() == current_card.get_card_id():
             try:
                 # Set next_card_id to card after current card
-                next_card_id = cards[i + 1].card_id
+                next_card_id = cards[i + 1].get_card_id()
             # Handles end of deck
             except IndexError:
                 break

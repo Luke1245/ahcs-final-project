@@ -10,7 +10,7 @@
               <label class="py-2">Deck:</label>
               <select class="border" name="deck_id">
                 {% for deck in decks %}
-                  <option value="{{deck.deck_id}}">{{ deck.deck_name }}</option>
+                  <option value="{{deck.get_deck_id()}}">{{ deck.get_deck_name() }}</option>
                 {% endfor %}
               </select>
               <label class="py-2">Familiarity:</label>

@@ -99,7 +99,7 @@ def register_post():
         # Add user to databsse
         connection.execute(
             "INSERT INTO users (email, password_hash) VALUES (?, ?)",
-            (user.email, user.password_hash),
+            (user.get_email(), user.get_password_hash()),
         )
         connection.commit()
         connection.close()

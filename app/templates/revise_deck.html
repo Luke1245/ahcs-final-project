@@ -6,11 +6,11 @@
         <div class="max-w-full space-y-3">
             <div>
               <label class="block py-2 font-bold">Front</label>
-              <p>{{  card.front }}</p>
+              <p>{{  card.get_front() }}</p>
             </div>
             <div id ="card_back" class="hidden">
               <label class="block py-2 font-bold">Back</label>
-              <p>{{  card.back }}</p>
+              <p>{{  card.get_back() }}</p>
             </div>
             <div class="pt-10 flex flex-col items-center">
               <button
@@ -23,10 +23,10 @@
                 Show
               </button>
               <form method="post" action="/process_next_card">
-                  <input class="hidden" type="number" id="deck_id" name="deck_id" value="{{ card.deck_id }}">
+                  <input class="hidden" type="number" id="deck_id" name="deck_id" value="{{ card.get_deck_id() }}">
                   <input class="hidden" type="number" id="next_card_id" name="next_card_id" value="{{ next_card_id }}">
-                  <input class="hidden" type="number" id="current_familiarity" name="current_familiarity" value="{{ card.familiarity }}">
-                  <input class="hidden" type="number" id="current_card_id" name="current_card_id" value="{{ card.card_id }}">
+                  <input class="hidden" type="number" id="current_familiarity" name="current_familiarity" value="{{ card.get_familiarity() }}">
+                  <input class="hidden" type="number" id="current_card_id" name="current_card_id" value="{{ card.get_card_id() }}">
                   <button
                     type="submit"
                     name="familiarity_update"
@@ -37,10 +37,10 @@
                   </button>
               </form>
               <form method="post" action="/process_next_card">
-                  <input class="hidden" type="number" id="deck_id" name="deck_id" value="{{ card.deck_id }}">
+                  <input class="hidden" type="number" id="deck_id" name="deck_id" value="{{ card.get_deck_id() }}">
                   <input class="hidden" type="number" id="next_card_id" name="next_card_id" value="{{ next_card_id }}">
-                  <input class="hidden" type="number" id="current_familiarity" name="current_familiarity" value="{{ card.familiarity }}">
-                  <input class="hidden" type="number" id="current_card_id" name="current_card_id" value="{{ card.card_id }}">
+                  <input class="hidden" type="number" id="current_familiarity" name="current_familiarity" value="{{ card.get_familiarity() }}">
+                  <input class="hidden" type="number" id="current_card_id" name="current_card_id" value="{{ card.get_card_id() }}">
                   <button
                     type="submit"
                     name="familiarity_update"

@@ -7,9 +7,9 @@ FAMILIARITY_MAPPINGS = {1: "Unfamiliar", 2: "Recognised", 3: "Familiar", 4: "Mem
 
 class User:
     def __init__(self, email, raw_password, user_id=0):
-        self.user_id = user_id
-        self.email = self._validate_email(email)
-        self.password_hash = self._validate_and_hash_password(raw_password)
+        self._user_id = user_id
+        self._email = self._validate_email(email)
+        self._password_hash = self._validate_and_hash_password(raw_password)
 
     def _validate_and_hash_password(self, raw_password):
         if len(raw_password) < 8:
@@ -38,15 +38,21 @@ class User:
 
         return email
 
+    def get_email(self):
+        return self._email
+
+    def get_password_hash(self):
+        return self._password_hash
+
 
 class Deck:
     def __init__(
         self, user_id, deck_name, number_of_cards=0, deck_id=0, new_deck=False
     ):
-        self.deck_id = deck_id
-        self.user_id = user_id
-        self.deck_name = self._validate_deck_name(deck_name, new_deck)
-        self.number_of_cards = number_of_cards
+        self._deck_id = deck_id
+        self._user_id = user_id
+        self._deck_name = self._validate_deck_name(deck_name, new_deck)
+        self._number_of_cards = number_of_cards
 
     def _validate_deck_name(self, deck_name, new_deck):
         # Only check if duplicate if class is being used to add a new deck
@@ -55,7 +61,7 @@ class Deck:
             # Retrieve amount of deck records with current deck name in database
             duplicate_amount = connection.execute(
                 "SELECT COUNT(*) FROM decks WHERE deck_name = ? AND user_id = ?",
-                (deck_name, self.user_id),
+                (deck_name, self.get_user_id()),
             ).fetchone()
             connection.close()
 
@@ -70,15 +76,27 @@ class Deck:
 
         return deck_name
 
+    def get_deck_id(self):
+        return self._deck_id
+
+    def get_user_id(self):
+        return self._user_id
+
+    def get_deck_name(self):
+        return self._deck_name
+
+    def get_number_of_cards(self):
+        return self._number_of_cards
+
 
 class Card:
     def __init__(self, deck_id, time_created, front, back, familiarity, card_id=0):
-        self.card_id = card_id
-        self.deck_id = self._validate_deck_id(deck_id)
-        self.time_created = time_created
-        self.front = self._validate_text(front)
-        self.back = self._validate_text(back)
-        self.familiarity = self._validate_familiarity(familiarity)
+        self._card_id = card_id
+        self._deck_id = self._validate_deck_id(deck_id)
+        self._time_created = time_created
+        self._front = self._validate_text(front)
+        self._back = self._validate_text(back)
+        self._familiarity = self._validate_familiarity(familiarity)
 
     def _validate_deck_id(self, deck_id):
         # Check if deck_id is supplied
@@ -103,13 +121,40 @@ class Card:
 
         raise ValueError("Familiarity must be a valid value")
 
+    def get_card_id(self):
+        return self._card_id
+
+    def get_deck_id(self):
+        return self._deck_id
+
+    def get_time_created(self):
+        return self._time_created
+
+    def get_front(self):
+        return self._front
+
+    def get_back(self):
+        return self._back
+
+    def get_familiarity(self):
+        return self._familiarity
+
+    def set_familiarity(self, familiarity):
+        self._familiarity = familiarity
+
+    def set_front(self, front):
+        self._front = front
+
+    def set_back(self, back):
+        self._back = back
+
 
 def fetch_decks(session):
     connection = db_connect()
     email = session.get("email")
     try:
         # Fetch user_id via users email
-        user_id = get_user_id(email)
+        user_id = get_user_id_by_email(email)
     except ValueError:
         raise ValueError("No users in found")
 
@@ -169,7 +214,7 @@ def sort_cards(cards):
 
     for i in range(n - 1):
         for j in range(0, n - i - 1):
-            if cards[j].familiarity > cards[j + 1].familiarity:
+            if cards[j].get_familiarity() > cards[j + 1].get_familiarity():
                 swapped = True
                 tmp = cards[j]
 
@@ -212,7 +257,7 @@ def delete_card_from_database(card_id):
     connection.close()
 
 
-def get_user_id(email):
+def get_user_id_by_email(email):
     connection = db_connect()
     # Retrieve user_id via users email
     user_id = connection.execute(
