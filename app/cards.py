@@ -113,9 +113,9 @@ def list_cards():
         # Check if the card text is greater than 30
         if len(card.get_front()) > 30:
             # Trim the card length with ellipses
-            card.set_front(card.front[:30] + "...")
+            card.set_front(card.get_front()[:30] + "...")
         if len(card.get_front()) > 30:
-            card.set_back(card.back[:30] + "...")
+            card.set_back(card.get_back()[:30] + "...")
 
     # Render the list of cards for user supplied deck
     return render_template("list_cards.html", cards=cards, deck=deck_name)

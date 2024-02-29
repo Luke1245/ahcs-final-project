@@ -15,7 +15,7 @@
           <tbody>
             {% for card in cards %}
               <tr>
-                <td class="pr-11">{{ card.front }}</td>
+                <td class="pr-11">{{ card.get_front() }}</td>
                 <td>{{ card.get_back() }}</td>
                 <td>{{ card.get_familiarity() }}</td>
                 <td class="text-burnt-sienna"><a href="/delete_card?card_id={{card.get_card_id()}}">Delete</a></td>

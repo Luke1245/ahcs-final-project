@@ -143,10 +143,10 @@ class Card:
         self._familiarity = familiarity
 
     def set_front(self, front):
-        self._front = self._validate_familiarity(front)
+        self._front = self._validate_text(front)
 
     def set_back(self, back):
-        self._back = self._validate_familiarity(back)
+        self._back = self._validate_text(back)
 
 
 def fetch_decks(session):
